@@ -1,4 +1,15 @@
 #include "EventWait.h"
+#include <stdio.h>
+
+EventWait::EventWait()
+    :efd_(epoll_create(MAXEVENT)),
+     events_(MAXEVENT)
+{
+}
+
+EventWait::~EventWait()
+{
+}
 
 std::vector<Event> EventWait::waitEvent()
 {
@@ -7,7 +18,7 @@ std::vector<Event> EventWait::waitEvent()
     int nfds = epoll_wait(efd_, 
                           &*events_.begin(), 
                           static_cast<int>(events_.size()), 
-                          1);
+                          -1);
 
     if(nfds == -1) 
     {
@@ -27,6 +38,22 @@ std::vector<Event> EventWait::waitEvent()
     return events;
 }
 
-EventWait::~EventWait()
+
+int EventWait::appendReadEvent(int fd)
 {
+    if(fd <= 0)
+    {
+        return -1;
+    }
+
+    struct epoll_event ev;
+    ev.events  = EPOLLIN; 
+    ev.data.fd = fd; 
+
+    if(epoll_ctl(efd_, EPOLL_CTL_ADD, fd, &ev) == -1) 
+    {
+        return -2;
+    }
+
+    return 0;
 }

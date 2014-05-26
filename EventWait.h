@@ -8,10 +8,12 @@
 class EventWait
 {
 public:
-    EventWait():efd_(epoll_create(MAXEVENT)){}
+    EventWait();
     ~EventWait();
 
     std::vector<Event> waitEvent();
+
+    int appendReadEvent(int fd);
 
 private:
     static const int MAXEVENT = 1024;
