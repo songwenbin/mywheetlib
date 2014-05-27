@@ -16,7 +16,7 @@ public:
     int appendReadEvent(int fd);
 
 private:
-    static const int MAXEVENT = 1024;
+    static const int MAXEVENT = 5;
 
     int efd_;
 

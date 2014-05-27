@@ -41,7 +41,7 @@ int main()
     loop.appendReadEvent(time.fd());
 
     EventNotifier note;
-    loop.appendReadEvent(note.fd());
+    //loop.appendReadEvent(note.fd());
 
     Foo foo;
     foo.setNote(&note);

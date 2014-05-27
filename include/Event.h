@@ -10,12 +10,12 @@ public:
     void setFd(int fd){fd_ = fd;}
     void setType(int type){type_ = type;}
     
+    int fd_;
 private:
     static const int NoneEvent;
     static const int ReadEvent;
     static const int WriteEvent;
 
-    int fd_;
     int type_; 
 };
 
