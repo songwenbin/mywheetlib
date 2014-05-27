@@ -8,20 +8,49 @@
 #include <fcntl.h>
 #include <sys/timerfd.h>
 
+#include "EventTimer.h"
+#include "EventNotifier.h"
+#include "Thread.h"
+
+
+class Foo
+{
+public:
+    void test()
+    {
+        printf("test\n");
+        note_->Notify();
+    }
+
+    void setNote(EventNotifier * note)
+    {
+        note_ = note;
+    }
+private:
+    EventNotifier * note_;
+};
+
+
+
 int main()
 {
     EventWait loop;
 
-    int timerfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK|TFD_CLOEXEC);
+    EventTimer time;
+    time.setTimeS(5); 
+    loop.appendReadEvent(time.fd());
 
-    struct itimerspec howlong;
-    bzero(&howlong, sizeof howlong);
-    howlong.it_value.tv_sec = 5;
-    timerfd_settime(timerfd, 0, &howlong, NULL);
+    EventNotifier note;
+    loop.appendReadEvent(note.fd());
+
+    Foo foo;
+    foo.setNote(&note);
+    Thread t(boost::bind(&Foo::test, foo));
+    t.start();
     
-    loop.appendReadEvent(timerfd);
     std::vector<Event> events = loop.waitEvent();
     printf("%d\n", events.size());
+    t.join();
 
     return 0;
 }

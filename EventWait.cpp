@@ -25,8 +25,7 @@ std::vector<Event> EventWait::waitEvent()
         return events;
     }
 
-    for(std::vector<struct epoll_event>::iterator iter = events_.begin(); iter != events_.end();
-        iter ++)
+    for(std::vector<struct epoll_event>::iterator iter = events_.begin(); iter != events_.end(); iter ++)
     {
         Event ev;
         ev.setFd((*(iter)).data.fd);     
