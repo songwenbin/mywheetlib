@@ -1,6 +1,7 @@
 SET(src
     Event.cpp
     EventWait.cpp
+    EventManager.cpp
     EventTimer.cpp
     EventNotifier.cpp
     Thread.cpp

@@ -56,3 +56,10 @@ int EventWait::appendReadEvent(int fd)
 
     return 0;
 }
+
+/*
+int EventWait::removeReadEvent(int fd)
+{
+
+}
+*/

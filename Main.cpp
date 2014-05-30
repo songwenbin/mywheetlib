@@ -10,6 +10,7 @@
 
 #include "EventTimer.h"
 #include "EventNotifier.h"
+#include "EventManager.h"
 #include "Thread.h"
 
 
@@ -30,10 +31,15 @@ private:
     EventNotifier * note_;
 };
 
+void test()
+{
+    printf("test");
+}
 
 
 int main()
 {
+    EventManager evManager;
     EventWait loop;
 
     EventTimer time;
@@ -42,20 +48,23 @@ int main()
 
     EventNotifier note;
     loop.appendReadEvent(note.fd());
+    
+    Event ev(note.fd());
+    ev.setReadEvent(test);
+    evManager.appendEvent(&ev);
 
     Foo foo;
     foo.setNote(&note);
     Thread t(boost::bind(&Foo::test, foo));
     t.start();
     
-    printf("register note fd is %d\n", note.fd());
-    printf("register time fd is %d\n", time.fd());
+
     std::vector<Event> events = loop.waitEvent();
     for(std::vector<Event>::iterator iter = events.begin(); 
         iter != events.end();
         iter ++)
     {
-        printf("active fd is %d\n", (*iter).fd_);
+        evManager.handleEvents((*iter).fd());
     }
     printf("%d\n", events.size());
     t.join();
