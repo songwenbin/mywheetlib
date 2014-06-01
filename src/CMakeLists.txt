@@ -5,6 +5,8 @@ SET(src
     EventTimer.cpp
     EventNotifier.cpp
     Thread.cpp
+    Sockets.cpp
+    EventServerSocket.cpp
     )
 
 INCLUDE_DIRECTORIES(../include)

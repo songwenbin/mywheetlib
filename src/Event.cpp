@@ -1,23 +1,22 @@
 #include "Event.h"
 #include <sys/epoll.h>
+#include <stdio.h>
 
 const int Event::NoneEvent  = 0;
 const int Event::ReadEvent  = EPOLLIN | EPOLLPRI;
 const int Event::WriteEvent = EPOLLOUT;
 
 
-void Event::handleEvent()
+void Event::handleReadEvent()
 {
-    if(type_ == NoneEvent)
+    if(readCb_) 
     {
-
-    }
-    else if(type_ == ReadEvent)
-    {
-        if(readCb_) readCb_();        
-    }
-    else if(type_ == WriteEvent)
-    {
-
+        readCb_();        
     }
 }
+
+void Event::handleWriteEvent()
+{
+
+}
+

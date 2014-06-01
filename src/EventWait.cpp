@@ -27,10 +27,13 @@ std::vector<Event> EventWait::waitEvent()
 
     for(std::vector<struct epoll_event>::iterator iter = events_.begin(); iter != events_.end(); iter ++)
     {
-        Event ev;
-        ev.setFd((*(iter)).data.fd);     
-        ev.setType((*(iter)).events);
-    
+        int fd   = (*(iter)).data.fd;
+        int type = (*(iter)).events;
+
+        //printf("fd   %d\n", fd);
+        //printf("type %d\n", type);
+        Event ev(fd, type);
+        ev.setType(type);
         events.push_back(ev);
     }
 

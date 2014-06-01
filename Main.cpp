@@ -19,6 +19,7 @@ class Foo
 public:
     void test()
     {
+        sleep(2);
         printf("test\n");
         note_->Notify();
     }

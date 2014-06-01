@@ -7,5 +7,9 @@ FIND_PACKAGE(Boost REQUIRED)
 ADD_SUBDIRECTORY(src)
 
 INCLUDE_DIRECTORIES(include)
-ADD_EXECUTABLE(test Main.cpp)
-TARGET_LINK_LIBRARIES(test talkthread pthread)
+
+#ADD_EXECUTABLE(test Main.cpp)
+#TARGET_LINK_LIBRARIES(test talkthread pthread)
+
+ADD_EXECUTABLE(TestServerSocket TestServerSocket.cpp)
+TARGET_LINK_LIBRARIES(TestServerSocket talkthread pthread)
