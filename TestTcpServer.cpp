@@ -11,7 +11,7 @@
 class Test
 {
 public:
-    void doit()
+    void doit() 
     { printf("ok\n"); }
 };
 

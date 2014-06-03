@@ -32,27 +32,28 @@ void EventTcpServer::startServer(int port)
 
 void EventTcpServer::startLoop()
 {
-    int i = 0;
-    while(i < 2)
+    while(1)
     {
         evManager_.startEventLoop();
-        i ++;
     }
 }
 
 void EventTcpServer::doConnection(int fd, NetWorkAddress & peer)
 {
     // 1. new tcp connection
-    TcpConnection * conn = new TcpConnection(fd, 
-                                             new Event(&evManager_,
-                                                       fd));
+    TcpConnection * conn = new TcpConnection(fd, new Event(&evManager_, fd));
     conn->setMessageCb(messageCb_);
         
     // 2. create event and append event
-    //Event ev(&evManager_, fd);
     (conn->event())->setReadEvent(boost::bind(&TcpConnection::handleRead, conn));
+    (conn->event())->setCloseEvent(boost::bind(&EventTcpServer::removeConnection, this, _1));
     evManager_.appendEvent(conn->event());
 
     // 3. add tcp server management
-    printf("ok11111111111111\n");
+    printf("recieve a connnection\n");
+}
+
+void EventTcpServer::removeConnection(int fd)
+{
+    evManager_.removeEvent(fd); 
 }

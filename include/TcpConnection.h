@@ -20,10 +20,15 @@ public:
     void setMessageCb(CallBack & cb)
     { messageCb_ = cb; }
 
+    void setCloseConnCb(CallBack &cb)
+    { }
+
     Event * event()
     { return event_; }
 
     void handleRead();
+    
+    //void handleClose();
 private:
     int fd_;
     CallBack messageCb_; 

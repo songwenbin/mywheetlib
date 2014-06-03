@@ -11,8 +11,10 @@ public:
     static const int NoneEvent;
     static const int ReadEvent;
     static const int WriteEvent;
+    static const int CloseEvent;
 
     typedef boost::function<void()> CallBack;
+    typedef boost::function<void(int)> CallBack1;
 
     Event(int fd, int type)
         :type_(type), 
@@ -38,6 +40,7 @@ public:
 
     void handleReadEvent();
     void handleWriteEvent();
+    void handleCloseEvent(int fd);
    
     void setReadEvent(const CallBack & cb)
     {
@@ -49,7 +52,7 @@ public:
         writeCb_ = cb;
     }
 
-    void setCloseEvent(const CallBack & cb)
+    void setCloseEvent(const CallBack1 & cb)
     {
         closeCb_ = cb;
     }
@@ -62,7 +65,7 @@ private:
 
     CallBack readCb_;
     CallBack writeCb_;
-    CallBack closeCb_;
+    CallBack1 closeCb_;
 };
 
 #endif //_EVENT_HEADER_

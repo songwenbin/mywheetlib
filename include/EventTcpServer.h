@@ -23,6 +23,9 @@ public:
     void startLoop();
 
     void doConnection(int fd, NetWorkAddress & peer);
+
+    void removeConnection(int fd);
+
 private:
     EventServerSocket *serversocket_;
     EventManager   evManager_;

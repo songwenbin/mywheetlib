@@ -1,5 +1,6 @@
 #include "EventWait.h"
 #include <stdio.h>
+#include <unistd.h>
 
 EventWait::EventWait()
     :efd_(epoll_create(MAXEVENT)),
@@ -9,6 +10,7 @@ EventWait::EventWait()
 
 EventWait::~EventWait()
 {
+    close(efd_);
 }
 
 std::vector<Event> EventWait::waitEvent()
@@ -30,8 +32,6 @@ std::vector<Event> EventWait::waitEvent()
         int fd   = (*(iter)).data.fd;
         int type = (*(iter)).events;
 
-        //printf("fd   %d\n", fd);
-        //printf("type %d\n", type);
         Event ev(fd, type);
         ev.setType(type);
         events.push_back(ev);
@@ -49,6 +49,7 @@ int EventWait::appendReadEvent(int fd)
     }
 
     struct epoll_event ev;
+    bzero(&ev, sizeof ev);
     ev.events  = EPOLLIN; 
     ev.data.fd = fd; 
 
@@ -60,9 +61,15 @@ int EventWait::appendReadEvent(int fd)
     return 0;
 }
 
-/*
-int EventWait::removeReadEvent(int fd)
+int EventWait::removeEvent(int fd, int type)
 {
+    struct epoll_event ev;
+    bzero(&ev, sizeof ev);
+    ev.events = type;
+    ev.data.fd = fd;
 
+    if(epoll_ctl(efd_, EPOLL_CTL_DEL, fd, &ev) < 0)
+    {
+        fprintf(stderr, "remove event is error!");
+    }
 }
-*/

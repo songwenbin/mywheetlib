@@ -27,16 +27,11 @@ int EventManager::handleEvents(int fd, int type)
      {
 
      }
-     /*
-     std::vector<int> fds = ev->handleEvent();
-
-     for(std::vector<int>::iterator it = fds.begin(); 
-         fds.end() != it;
-         it ++)
+     else if(!(type & Event::ReadEvent) &&
+              (type & Event::CloseEvent))
      {
-          removeEvent(*it);
+         ev->handleCloseEvent(fd);
      }
-     */
 
      return 0;
 }
@@ -46,13 +41,18 @@ int EventManager::appendEvent(Event * ev)
     int fd = ev->fd();
     eventList_[fd] = ev;
 
+    //epoll event
     loop_.appendReadEvent(ev->fd());
 }
 
 int EventManager::removeEvent(int fd)
 {
+    //epoll event
+    loop_.removeEvent(fd, eventList_[fd]->type());
+
     assert(eventList_.find(fd) != eventList_.end());
     eventList_.erase(eventList_.find(fd));
+    
 }
 
 void EventManager::startEventLoop()

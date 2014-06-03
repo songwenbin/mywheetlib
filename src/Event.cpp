@@ -5,6 +5,7 @@
 const int Event::NoneEvent  = 0;
 const int Event::ReadEvent  = EPOLLIN | EPOLLPRI;
 const int Event::WriteEvent = EPOLLOUT;
+const int Event::CloseEvent = EPOLLHUP;
 
 
 void Event::handleReadEvent()
@@ -20,3 +21,10 @@ void Event::handleWriteEvent()
 
 }
 
+void Event::handleCloseEvent(int fd)
+{
+    if(closeCb_)
+    {
+        closeCb_(fd);
+    }
+}
