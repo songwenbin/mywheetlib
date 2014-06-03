@@ -43,6 +43,7 @@ void EventTcpServer::doConnection(int fd, NetWorkAddress & peer)
     // 1. new tcp connection
     TcpConnection * conn = new TcpConnection(fd, new Event(&evManager_, fd));
     conn->setMessageCb(messageCb_);
+    conn->setCloseConnCb(boost::bind(&EventTcpServer::removeConnection, this, _1));
         
     // 2. create event and append event
     (conn->event())->setReadEvent(boost::bind(&TcpConnection::handleRead, conn));
