@@ -16,13 +16,16 @@ public:
 
     Event(int fd, int type)
         :type_(type), 
-         fd_(fd){}
+         fd_(fd){
+        readCb_ = NULL;
+    }
 
     Event(EventManager * eManager, int fd)
          :eManager_(eManager),
           type_(NoneEvent),
           fd_(fd)
     {
+        readCb_ = NULL;
     }
          
     ~Event(){}

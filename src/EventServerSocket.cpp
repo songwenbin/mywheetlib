@@ -1,5 +1,6 @@
 #include "EventServerSocket.h"
 #include "Sockets.h"
+#include <stdio.h>
 
 EventServerSocket::EventServerSocket(NetWorkAddress & listen)
     :acceptFd_(socketCreate())
@@ -25,7 +26,7 @@ void EventServerSocket::handleRead()
     {
         if(actionAfterConnection_)
         {
-            actionAfterConnection_();
+            actionAfterConnection_(connfd, peerAddress);
         }
     }
     else

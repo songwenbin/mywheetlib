@@ -7,12 +7,12 @@
 class EventServerSocket
 {
 public:
-     typedef boost::function<void()> CallBack;
+     typedef boost::function<void (int, NetWorkAddress&)> CallBack;
     
      EventServerSocket(NetWorkAddress & listen);
      ~EventServerSocket();
 
-     void  handleRead();
+     void handleRead();
      void listenConnection(); 
      
      int fd()
