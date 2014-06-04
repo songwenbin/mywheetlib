@@ -7,12 +7,13 @@
 #include <fcntl.h>
 
 #include "EventTcpServer.h"
+#include "EventBuffer.h"
 
 class Test
 {
 public:
-    void doit() 
-    { printf("ok\n"); }
+    void doit(EventBuffer * buf) 
+    { printf("%s\n", buf->peek()); }
 };
 
 int main()
@@ -21,8 +22,7 @@ int main()
 
     Test t;
 
-    tcpServ.setMessageCb(boost::bind(&Test::doit, t));
-
+    tcpServ.setMessageCb(boost::bind(&Test::doit, t, _1));
    
     tcpServ.startServer(5258);
     tcpServ.startLoop();

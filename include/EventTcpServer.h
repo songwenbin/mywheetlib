@@ -7,11 +7,12 @@
 #include "EventServerSocket.h"
 #include "NetWorkAddress.h"
 #include "TcpConnection.h"
+#include "EventBuffer.h"
 
 class EventTcpServer
 {
 public:
-    typedef boost::function<void()> CallBack;
+    typedef boost::function<void(EventBuffer *buf)> CallBack;
 
     EventTcpServer();
     ~EventTcpServer();

@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <boost/function.hpp>
 #include "Event.h"
+#include "EventBuffer.h"
 
 class TcpConnection
 {
 public:
-    typedef boost::function<void()> CallBack;
+    typedef boost::function<void(EventBuffer * buf)> CallBack;
     typedef boost::function<void(int)> CallBack1;
 
     TcpConnection(int fd, Event * event)
@@ -29,13 +30,14 @@ public:
 
     void handleRead();
     
-    //void handleClose();
 private:
     int fd_;
     CallBack messageCb_; 
     CallBack1 closeCb_;
     
     Event * event_;
+
+    EventBuffer buffer_;
 };
 
 #endif
