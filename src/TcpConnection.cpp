@@ -23,23 +23,19 @@ void TcpConnection::handleRead()
 
 void TcpConnection::handleWrite()
 {
-    printf("......................\n");
-    /*
     if(outBuffer_.dataSize() > 0)
     {
         ssize_t n = write(fd_, outBuffer_.peek(), outBuffer_.dataSize());
-        // - n
+        outBuffer_.retrieve(n);
     }
     else if(outBuffer_.dataSize() == 0)
     {
         mg_->removeWriteEvent(fd_);
     }
-    */
-    mg_->removeWriteEvent(fd_);
 }
 
 void TcpConnection::sendData(std::string & data)
 {
+    outBuffer_.append(data.c_str(), data.size());
     mg_->appendWriteEvent(fd_);
-    //printf("test %d\n", mg_->appendWriteEvent(fd_));
 }

@@ -10,10 +10,11 @@
 #include "EventBuffer.h"
 #include "TcpConnection.h"
 
+// Echo Server
 void doit(TcpConnPtr conn, EventBuffer * buf) 
 { 
     printf("%s\n", buf->peek()); 
-    std::string data("ok");
+    std::string data(buf->peek());
     conn->sendData(data);
 }
 

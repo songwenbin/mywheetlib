@@ -15,8 +15,6 @@ int EventManager::handleEvents(int fd, int type)
 
      Event * ev = evIndex->second;
 
-     printf("type %d\n", type);
-
      if(type & Event::NoneEvent)
      {
 
@@ -27,7 +25,6 @@ int EventManager::handleEvents(int fd, int type)
      }
      else if(type & Event::WriteEvent)
      {
-         printf("start write\n");
          ev->handleWriteEvent();
      }
      else if(!(type & Event::ReadEvent) &&

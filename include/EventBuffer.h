@@ -46,8 +46,9 @@ public:
 
     void append(const char * data, size_t len)
     {
-        resizeBuffer(len);        
+        //resizeBuffer(len);        
         std::copy(data, data+len, begin() + freeMemIndex_);
+        freeMemIndex_ += len;
     }
   
     void resizeBuffer(size_t len)  
