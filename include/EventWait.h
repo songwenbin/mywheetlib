@@ -13,8 +13,9 @@ public:
 
     std::vector<Event> waitEvent();
 
-    int appendReadEvent(int fd);
-    int removeEvent(int fd, int type);
+    int appendEvent(int fd, int type);
+    int updateEvent(int fd, int type);
+    int removeEvent(int fd);
 
 private:
     static const int MAXEVENT = 5;

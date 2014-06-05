@@ -40,8 +40,7 @@ std::vector<Event> EventWait::waitEvent()
     return events;
 }
 
-
-int EventWait::appendReadEvent(int fd)
+int EventWait::appendEvent(int fd, int type)
 {
     if(fd <= 0)
     {
@@ -50,10 +49,33 @@ int EventWait::appendReadEvent(int fd)
 
     struct epoll_event ev;
     bzero(&ev, sizeof ev);
-    ev.events  = EPOLLIN; 
+    ev.events  = type; 
     ev.data.fd = fd; 
 
     if(epoll_ctl(efd_, EPOLL_CTL_ADD, fd, &ev) == -1) 
+    {
+        if(epoll_ctl(efd_, EPOLL_CTL_MOD, fd, &ev) == -1) 
+        {
+             return -2;
+        }
+    }
+
+    return 0;
+}
+
+int EventWait::updateEvent(int fd, int type)
+{
+    if(fd <= 0)
+    {
+        return -1;
+    }
+
+    struct epoll_event ev;
+    bzero(&ev, sizeof ev);
+    ev.events = type;
+    ev.data.fd = fd;
+
+    if(epoll_ctl(efd_, EPOLL_CTL_MOD, fd, &ev) < 0)
     {
         return -2;
     }
@@ -61,14 +83,14 @@ int EventWait::appendReadEvent(int fd)
     return 0;
 }
 
-int EventWait::removeEvent(int fd, int type)
+int EventWait::removeEvent(int fd)
 {
     struct epoll_event ev;
     bzero(&ev, sizeof ev);
-    ev.events = type;
+    ev.events = Event::NoneEvent;
     ev.data.fd = fd;
 
-    if(epoll_ctl(efd_, EPOLL_CTL_DEL, fd, &ev) < 0)
+    if(epoll_ctl(efd_, EPOLL_CTL_MOD, fd, &ev) < 0)
     {
         fprintf(stderr, "remove event is error!");
     }

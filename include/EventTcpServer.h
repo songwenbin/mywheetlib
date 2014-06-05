@@ -12,7 +12,7 @@
 class EventTcpServer
 {
 public:
-    typedef boost::function<void(EventBuffer *buf)> CallBack;
+    typedef boost::function<void(TcpConnPtr conn, EventBuffer *buf)> CallBack;
 
     EventTcpServer();
     ~EventTcpServer();

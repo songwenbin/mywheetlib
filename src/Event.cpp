@@ -18,7 +18,10 @@ void Event::handleReadEvent()
 
 void Event::handleWriteEvent()
 {
-
+    if(writeCb_)
+    {
+        writeCb_();
+    }
 }
 
 void Event::handleCloseEvent(int fd)

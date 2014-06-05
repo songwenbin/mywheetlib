@@ -25,7 +25,8 @@ void EventTcpServer::startServer(int port)
 
     tcpEvent = new Event(&evManager_, serversocket_->fd());
     tcpEvent->setReadEvent(boost::bind(&EventServerSocket::handleRead, serversocket_));
-    evManager_.appendEvent(tcpEvent);
+    //tcpEvent->setWriteEvent();
+    evManager_.appendReadEvent(tcpEvent);
 
     serversocket_->listenConnection();
 }
@@ -41,14 +42,15 @@ void EventTcpServer::startLoop()
 void EventTcpServer::doConnection(int fd, NetWorkAddress & peer)
 {
     // 1. new tcp connection
-    TcpConnection * conn = new TcpConnection(fd, new Event(&evManager_, fd));
+    TcpConnection * conn = new TcpConnection(fd, new Event(&evManager_, fd), &evManager_);
     conn->setMessageCb(messageCb_);
     conn->setCloseConnCb(boost::bind(&EventTcpServer::removeConnection, this, _1));
         
     // 2. create event and append event
     (conn->event())->setReadEvent(boost::bind(&TcpConnection::handleRead, conn));
+    (conn->event())->setWriteEvent(boost::bind(&TcpConnection::handleWrite, conn));
     (conn->event())->setCloseEvent(boost::bind(&EventTcpServer::removeConnection, this, _1));
-    evManager_.appendEvent(conn->event());
+    evManager_.appendReadEvent(conn->event());
 
     // 3. add tcp server management
     printf("recieve a connnection\n");

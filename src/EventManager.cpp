@@ -15,6 +15,8 @@ int EventManager::handleEvents(int fd, int type)
 
      Event * ev = evIndex->second;
 
+     printf("type %d\n", type);
+
      if(type & Event::NoneEvent)
      {
 
@@ -25,7 +27,8 @@ int EventManager::handleEvents(int fd, int type)
      }
      else if(type & Event::WriteEvent)
      {
-
+         printf("start write\n");
+         ev->handleWriteEvent();
      }
      else if(!(type & Event::ReadEvent) &&
               (type & Event::CloseEvent))
@@ -34,25 +37,6 @@ int EventManager::handleEvents(int fd, int type)
      }
 
      return 0;
-}
-
-int EventManager::appendEvent(Event * ev)
-{
-    int fd = ev->fd();
-    eventList_[fd] = ev;
-
-    //epoll event
-    loop_.appendReadEvent(ev->fd());
-}
-
-int EventManager::removeEvent(int fd)
-{
-    //epoll event
-    loop_.removeEvent(fd, eventList_[fd]->type());
-
-    assert(eventList_.find(fd) != eventList_.end());
-    eventList_.erase(eventList_.find(fd));
-    
 }
 
 void EventManager::startEventLoop()
@@ -64,4 +48,53 @@ void EventManager::startEventLoop()
     {
         handleEvents((*iter).fd(), (*iter).type()); 
     }
+}
+
+int EventManager::appendReadEvent(Event * ev)
+{
+    //1. add event map
+    int fd = ev->fd();
+    int type = ev->type() | Event::ReadEvent;
+    ev->setType(type);
+    eventList_[fd] = ev;
+
+    //2. add epoll wait
+    loop_.appendEvent(fd, type);
+}
+
+int EventManager::removeReadEvent(int fd)
+{
+    //1. remove epoll wait
+    Event * ev = eventList_[fd]; 
+    int type = ev->type() & (~Event::ReadEvent);
+    loop_.updateEvent(fd, type);
+}
+
+int EventManager::appendWriteEvent(int fd)
+{
+    //1. add event map
+    Event * ev = eventList_[fd]; 
+    int type = ev->type() | Event::WriteEvent;
+
+    //2. add epoll wait
+    loop_.updateEvent(fd, type);
+}
+
+int EventManager::removeWriteEvent(int fd)
+{
+    //1. remove epoll wait
+    Event * ev = eventList_[fd]; 
+    int type = ev->type() & (~Event::WriteEvent);
+    loop_.updateEvent(fd, type);
+}
+
+
+int EventManager::removeEvent(int fd)
+{
+    //1. remove epoll wait 
+    loop_.removeEvent(fd);
+
+    //2. remove event map
+    assert(eventList_.find(fd) != eventList_.end());
+    eventList_.erase(eventList_.find(fd));
 }

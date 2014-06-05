@@ -8,21 +8,20 @@
 
 #include "EventTcpServer.h"
 #include "EventBuffer.h"
+#include "TcpConnection.h"
 
-class Test
-{
-public:
-    void doit(EventBuffer * buf) 
-    { printf("%s\n", buf->peek()); }
-};
+void doit(TcpConnPtr conn, EventBuffer * buf) 
+{ 
+    printf("%s\n", buf->peek()); 
+    std::string data("ok");
+    conn->sendData(data);
+}
 
 int main()
 {
     EventTcpServer tcpServ;
 
-    Test t;
-
-    tcpServ.setMessageCb(boost::bind(&Test::doit, t, _1));
+    tcpServ.setMessageCb(doit);
    
     tcpServ.startServer(5258);
     tcpServ.startLoop();

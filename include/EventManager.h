@@ -9,17 +9,22 @@
 class EventManager
 {
 public:
-    int appendEvent(Event * ev);
-    int removeEvent(int fd);
+    int appendEvent(Event * ev);//
+    int removeEvent(int fd);//
 
     void startEventLoop();
-private:
+
     int handleEvents(int fd,int type);
+
+    int appendReadEvent(Event * ev);
+    int removeReadEvent(int fd);
+    int appendWriteEvent(int fd);
+    int removeWriteEvent(int fd);
 
 private:
     typedef std::map<int, Event*> EventMap;
 
-    EventMap eventList_;
+    EventMap eventList_; // eventList_[fd] = Event
 
     EventWait loop_;
 };
