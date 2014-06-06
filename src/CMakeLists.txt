@@ -9,6 +9,7 @@ SET(src
     EventServerSocket.cpp
     EventTcpServer.cpp
     TcpConnection.cpp
+    EventBuffer.cpp
     )
 
 INCLUDE_DIRECTORIES(../include)

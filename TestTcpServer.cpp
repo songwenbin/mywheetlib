@@ -13,8 +13,11 @@
 // Echo Server
 void doit(TcpConnPtr conn, EventBuffer * buf) 
 { 
-    printf("%s\n", buf->peek()); 
-    std::string data(buf->peek());
+    char * str = buf->getStr();
+    buf->popData(strlen(str));
+
+    printf("%s\n", str); 
+    std::string data(str);
     conn->sendData(data);
 }
 

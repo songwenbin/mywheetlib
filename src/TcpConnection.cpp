@@ -25,8 +25,8 @@ void TcpConnection::handleWrite()
 {
     if(outBuffer_.dataSize() > 0)
     {
-        ssize_t n = write(fd_, outBuffer_.peek(), outBuffer_.dataSize());
-        outBuffer_.retrieve(n);
+        ssize_t n = write(fd_, outBuffer_.getStr(), outBuffer_.dataSize());
+        outBuffer_.popData(n);
     }
     else if(outBuffer_.dataSize() == 0)
     {
