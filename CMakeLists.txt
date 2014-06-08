@@ -13,3 +13,6 @@ INCLUDE_DIRECTORIES(include)
 
 ADD_EXECUTABLE(TestTcpServer TestTcpServer.cpp)
 TARGET_LINK_LIBRARIES(TestTcpServer talkthread pthread)
+
+ADD_EXECUTABLE(TestThreadPool TestThreadPool.cpp)
+TARGET_LINK_LIBRARIES(TestThreadPool talkthread pthread)

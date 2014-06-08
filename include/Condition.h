@@ -7,7 +7,7 @@ class Condition
 {
 public:
     Condition(MutexLock & mutex)
-        :mutex_(mutex_)
+        :mutex_(mutex)
     {
         pthread_cond_init(&cond_, NULL);
     }

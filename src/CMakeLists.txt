@@ -10,6 +10,7 @@ SET(src
     EventTcpServer.cpp
     TcpConnection.cpp
     EventBuffer.cpp
+    ThreadPool.cpp
     )
 
 INCLUDE_DIRECTORIES(../include)
